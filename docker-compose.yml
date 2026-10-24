@@ -1,17 +1,28 @@
-version: "3.9"
-
 services:
   jupyter:
     build: .
+    container_name: jupyter-maestria
+
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+
     ports:
-      - "8890:8888"
+      - "9999:8888"
+
     volumes:
       - .:/app
+
     environment:
       - JUPYTER_TOKEN=1234
+      - HOME=/tmp
+      - JUPYTER_CONFIG_DIR=/tmp/jupyter-config
+      - JUPYTER_DATA_DIR=/tmp/jupyter-data
+      - JUPYTER_RUNTIME_DIR=/tmp/jupyter-runtime
+
+    working_dir: /app
+
     command: >
       jupyter lab
       --ip=0.0.0.0
       --port=8888
       --no-browser
-      --allow-root
+      --ServerApp.root_dir=/app
